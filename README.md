@@ -7,8 +7,18 @@ Students are expected to:
 * Append name (and purpose) of your project to this README file
 * Push your commits regularly, with **proper** commit messages
 
+Member
+=====================================
+Nguyen Nhu Khoa
+Nguyen Thanh Son
+Nguyen Van Quang
 
 Project description
 =====================================
 
+Music player from public sites (in this project, the site will be soundcloud)
+
+
 *Add your project description here*
+
+
