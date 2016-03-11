@@ -113,46 +113,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void selectItem(int position){
-        Fragment fragment = null;
-        switch(position){
-            case 0:
-                fragment = new MainFragment();
-                break;
-            case 1:
-                fragment = new PlaylistFragment();
-                break;
-            case 2:
-                fragment = new LikeFragment();
-                break;
-            case 3:
-                fragment = new FollowingFragment();
-            default:
-                break;
-        }
-
-        if(fragment != null){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.mainFrag, fragment).commit();
-
-            scMenuDrawer.setItemChecked(position, true);
-            scMenuDrawer.setSelection(position);
-            setTitle(menuItemArray[position]);
-            scDrawerLayout.closeDrawer(scMenuDrawer);
-            Log.i("name", menuItemArray[position]);
-        }else{
-            Log.e("MainActivity", "Error in creating fragment");
-        }
-    }
-
 //    private void selectItem(int position){
+//        Fragment fragment = null;
 //        switch(position){
 //            case 0:
-//                startActivity(new Intent(this, MainActivity.class));
+//                fragment = new MainFragment();
 //                break;
 //            case 1:
-//                startActivity(new Intent(this, PlaylistActivity.class));
+//                fragment = new PlaylistFragment();
 //                break;
+//            case 2:
+//                fragment = new LikeFragment();
+//                break;
+//            case 3:
+//                fragment = new FollowingFragment();
+//            default:
+//                break;
+//        }
+//
+//        if(fragment != null){
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.mainFrag, fragment).commit();
+//
+//            scMenuDrawer.setItemChecked(position, true);
+//            scMenuDrawer.setSelection(position);
+//            setTitle(menuItemArray[position]);
+//            scDrawerLayout.closeDrawer(scMenuDrawer);
+//            Log.i("name", menuItemArray[position]);
+//        }else{
+//            Log.e("MainActivity", "Error in creating fragment");
+//        }
+//    }
+
+    private void selectItem(int position){
+        switch(position){
+            case 0:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            case 1:
+                startActivity(new Intent(this, PlaylistActivity.class));
+                break;
 //            case 2:
 //                startActivity(new Intent(this, LikeActivity.class));
 //                break;
@@ -161,10 +161,10 @@ public class MainActivity extends AppCompatActivity {
 //                break;
 //            case 4:
 //                startActivity(new Intent(this, SettingActivity.class));
-//            default:
-//                break;
-//        }
-//
-//    }
+            default:
+                break;
+        }
+
+    }
 
 }
