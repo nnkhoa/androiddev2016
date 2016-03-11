@@ -19,9 +19,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlaylistActivity"
-            android:label="Playlist"
-            ></activity>
+            android:name=".PlaylistActivity">
+
+        </activity>
     </application>
 
 </manifest>
