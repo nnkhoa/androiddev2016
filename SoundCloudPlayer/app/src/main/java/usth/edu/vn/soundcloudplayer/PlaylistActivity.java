@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import adapter.ViewPagerAdapter;
+import fragment.FollowingFragment;
+import fragment.LikeFragment;
 
 public class PlaylistActivity extends AppCompatActivity {
 
@@ -153,14 +155,14 @@ public class PlaylistActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case 1:
-                startActivity(new Intent(this, PlaylistActivity.class));
+                scDrawerLayout.closeDrawers();
                 break;
-//            case 2:
-//                startActivity(new Intent(this, LikeActivity.class));
-//                break;
-//            case 3:
-//                startActivity(new Intent(this, FollowingActivity.class));
-//                break;
+            case 2:
+                new LikeFragment();
+                break;
+            case 3:
+                new FollowingFragment();
+                break;
 //            case 4:
 //                startActivity(new Intent(this, SettingActivity.class));
             default:

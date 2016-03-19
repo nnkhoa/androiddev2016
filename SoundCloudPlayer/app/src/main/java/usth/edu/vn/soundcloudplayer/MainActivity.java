@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position){
         switch(position){
             case 0:
-                startActivity(new Intent(this, MainActivity.class));
+                scDrawerLayout.closeDrawers();
                 break;
             case 1:
                 startActivity(new Intent(this, PlaylistActivity.class));
