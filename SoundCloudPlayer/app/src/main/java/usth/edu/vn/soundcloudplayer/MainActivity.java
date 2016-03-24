@@ -23,10 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.SimpleFormatter;
 
+import adapter.SCTrackAdapter;
 import fragment.FollowingFragment;
 import fragment.LikeFragment;
 import fragment.MainFragment;
@@ -46,18 +48,24 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence scActivityName;
     private static final String TAG = "MainActivity";
 
+    private List<Track> scListItems;
+    private SCTrackAdapter scTrackAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Config.API_URL).build();
-        SCService scService = restAdapter.create(SCService.class);
+        scListItems = new ArrayList<Track>();
+        ListView listView = (ListView)findViewById(R.id.track_list_view);
+        scTrackAdapter = new SCTrackAdapter(this, scListItems);
+        listView.setAdapter(scTrackAdapter);
+
+        SCService scService = SoundCloud.getService();
         scService.getRecentTrack(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()), new Callback<List<Track>>() {
             @Override
             public void success(List<Track> tracks, Response response) {
-                Log.d(TAG, "First track title: " + tracks.get(0).getScTitle());
+                loadTrack(tracks);
             }
 
             @Override
@@ -190,6 +198,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    private void loadTrack(List<Track> tracks){
+        scListItems.clear();
+        scListItems.addAll(tracks);
+        scTrackAdapter.notifyDataSetChanged();
     }
 
 }

@@ -3,10 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
+    <ListView
+        android:id="@+id/track_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Welcome to SoundCloud Player"
-        android:textSize="30dp"
-        android:background="#FFE4733F"/>
+        android:layout_height="match_parent" />
 </LinearLayout>
