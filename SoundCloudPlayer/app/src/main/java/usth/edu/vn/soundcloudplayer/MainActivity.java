@@ -1,10 +1,5 @@
 package usth.edu.vn.soundcloudplayer;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -15,26 +10,28 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
+
 
 import adapter.SCTrackAdapter;
-import fragment.FollowingFragment;
-import fragment.LikeFragment;
-import fragment.MainFragment;
-import fragment.PlaylistFragment;
+
 import retrofit.Callback;
-import retrofit.RestAdapter;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -51,15 +48,70 @@ public class MainActivity extends AppCompatActivity {
     private List<Track> scListItems;
     private SCTrackAdapter scTrackAdapter;
 
+    private TextView scPlayingTrackName;
+    private ImageView scPlayingTrackImage;
+
+    private MediaPlayer scMediaPlayer;
+    private ImageView scPlayerControl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        scMediaPlayer = new MediaPlayer();
+        scMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        scMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                togglePlayPause();
+            }
+        });
+
         scListItems = new ArrayList<Track>();
         ListView listView = (ListView)findViewById(R.id.track_list_view);
         scTrackAdapter = new SCTrackAdapter(this, scListItems);
         listView.setAdapter(scTrackAdapter);
+
+        scPlayingTrackImage =(ImageView)findViewById(R.id.playing_track_image);
+        scPlayingTrackName =(TextView)findViewById(R.id.playing_track_name);
+        scPlayerControl = (ImageView)findViewById(R.id.player_control);
+
+        scPlayerControl.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                togglePlayPause();
+            }
+        });
+
+        scMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                scPlayerControl.setImageResource(R.drawable.ic_play);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Track track = scListItems.get(position);
+
+                scPlayingTrackName.setText(track.getScTitle());
+                Picasso.with(MainActivity.this).load(track.getScArtworkURL()).into(scPlayingTrackImage);
+
+                if(scMediaPlayer.isPlaying()){
+                    scMediaPlayer.stop();
+                    scMediaPlayer.reset();
+                }
+
+                try{
+                    scMediaPlayer.setDataSource(track.getScStreamURL() + "?client_id=" + Config.CLIENT_ID);
+                    scMediaPlayer.prepareAsync();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         SCService scService = SoundCloud.getService();
         scService.getRecentTrack(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()), new Callback<List<Track>>() {
@@ -77,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         scMenuDrawer = (ListView)findViewById(R.id.menu_nav);
         scDrawerLayout = (DrawerLayout)findViewById(R.id.menu_drawer);
         scActivityName = getTitle();
-        Log.i("oncreate Title", scActivityName.toString());
+        Log.i("onCreate Title", scActivityName.toString());
 
         addMenuItem();
         setupDrawer();
@@ -146,37 +198,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void selectItem(int position){
-//        Fragment fragment = null;
-//        switch(position){
-//            case 0:
-//                fragment = new MainFragment();
-//                break;
-//            case 1:
-//                fragment = new PlaylistFragment();
-//                break;
-//            case 2:
-//                fragment = new LikeFragment();
-//                break;
-//            case 3:
-//                fragment = new FollowingFragment();
-//            default:
-//                break;
-//        }
-//
-//        if(fragment != null){
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            fragmentManager.beginTransaction().replace(R.id.mainFrag, fragment).commit();
-//
-//            scMenuDrawer.setItemChecked(position, true);
-//            scMenuDrawer.setSelection(position);
-//            setTitle(menuItemArray[position]);
-//            scDrawerLayout.closeDrawer(scMenuDrawer);
-//            Log.i("name", menuItemArray[position]);
-//        }else{
-//            Log.e("MainActivity", "Error in creating fragment");
-//        }
-//    }
 
     private void selectItem(int position){
         switch(position){
@@ -206,4 +227,27 @@ public class MainActivity extends AppCompatActivity {
         scTrackAdapter.notifyDataSetChanged();
     }
 
+    private void togglePlayPause(){
+        if(scMediaPlayer.isPlaying()){
+            scMediaPlayer.pause();
+            scPlayerControl.setImageResource(R.drawable.ic_play);
+        }else{
+            scMediaPlayer.start();
+            scPlayerControl.setImageResource(R.drawable.ic_pause);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(scMediaPlayer != null){
+            if(scMediaPlayer.isPlaying()){
+                scMediaPlayer.stop();
+            }
+
+            scMediaPlayer.release();
+            scMediaPlayer = null;
+        }
+    }
 }
