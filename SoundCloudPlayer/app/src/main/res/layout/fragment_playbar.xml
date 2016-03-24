@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar
     android:id="@+id/playbar"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="@color/colorPrimary">
+    android:layout_height="100dp"
+    android:background="#ec7843"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView
-        android:id="@+id/playbutton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/play"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="20dp"/>
-
-</RelativeLayout>
+        android:id="@+id/playing_track_image"
+        android:layout_width="92dp"
+        android:layout_height="92dp" />
+    <TextView
+        android:id="@+id/playing_track_name"
+        android:paddingLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/player_control"
+        android:layout_gravity="right"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size" />
+</android.support.v7.widget.Toolbar>
