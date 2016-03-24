@@ -37,21 +37,11 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-    <RelativeLayout
-        android:id="@+id/playbar"
+    <fragment
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/colorPrimary">
-        <ImageView
-            android:id="@+id/playbutton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/play"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="20dp"/>
-    </RelativeLayout>
+        android:name="fragment.PlaybarFragment"
+        android:id="@+id/playbarfrag"/>
 </RelativeLayout>
