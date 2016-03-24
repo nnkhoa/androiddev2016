@@ -2,6 +2,7 @@ package usth.edu.vn.soundcloudplayer;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -21,10 +22,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.SimpleFormatter;
+
 import fragment.FollowingFragment;
 import fragment.LikeFragment;
 import fragment.MainFragment;
 import fragment.PlaylistFragment;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,12 +44,27 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle scDrawerToggle;
     private DrawerLayout scDrawerLayout;
     private CharSequence scActivityName;
+    private static final String TAG = "MainActivity";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Config.API_URL).build();
+        SCService scService = restAdapter.create(SCService.class);
+        scService.getRecentTrack(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()), new Callback<List<Track>>() {
+            @Override
+            public void success(List<Track> tracks, Response response) {
+                Log.d(TAG, "First track title: " + tracks.get(0).getScTitle());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Error " + error);
+            }
+        });
 
         scMenuDrawer = (ListView)findViewById(R.id.menu_nav);
         scDrawerLayout = (DrawerLayout)findViewById(R.id.menu_drawer);
